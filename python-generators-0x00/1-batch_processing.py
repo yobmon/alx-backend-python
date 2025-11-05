@@ -1,7 +1,7 @@
 
 seed = __import__('seed')
 
-def stream_users_in_batches(batch_size):
+def streamusersinbatches(batch_size):
     try:
         connection = seed.connect_to_prodev()
         cursor = connection.cursor()
@@ -21,7 +21,7 @@ def stream_users_in_batches(batch_size):
 
 
 def batch_processing(batch_size):
-    for batch in stream_users_in_batches(batch_size):
-       filtered_batch= [user for user in batch if user[3] > 40]
+    for batch in streamusersinbatches(batch_size):
+       filtered_batch= [user for user in batch if user[3] > 25]
        
-       print(filtered_batch)
+       return filtered_batch

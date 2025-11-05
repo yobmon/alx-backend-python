@@ -5,7 +5,7 @@ seed = __import__('seed')
 def paginate_users(page_size, offset):
     connection = seed.connect_to_prodev()
     cursor = connection.cursor()
-    cursor.execute(f"SELECT * FROM alx_users LIMIT {page_size} OFFSET {offset}")
+    cursor.execute(f"SELECT * FROM user_data LIMIT {page_size} OFFSET {offset}") #alx_users
     rows = cursor.fetchall()
     connection.close()
     return rows

@@ -6,7 +6,7 @@ def stream_users_in_batches(batch_size):
         connection = seed.connect_to_prodev()
         cursor = connection.cursor()
         
-        cursor.execute("SELECT * FROM user_data;")
+        cursor.execute("SELECT * FROM user_data;")  #alx_users
         while True:
             rows = cursor.fetchmany(batch_size)
             if not rows:

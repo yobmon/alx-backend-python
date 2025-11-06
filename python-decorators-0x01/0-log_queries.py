@@ -1,12 +1,13 @@
 import sqlite3
 import functools
-
+from datetime import datetime
 def log_queries(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        currenttime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         query = kwargs.get('query', None)
         if query:
-            print(f"[LOG] Executing SQL Query: {query}")
+            print(f"[LOG] Executing SQL Query: {query} at {currenttime} time")
         else:
             print("[LOG] No query provided.")
         
@@ -29,5 +30,4 @@ CREATE TABLE IF NOT EXISTS users (
     conn.close()
     return results
 
-#### fetch users while logging the query
 users = fetch_all_users(query="SELECT * FROM users")

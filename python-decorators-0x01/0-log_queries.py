@@ -1,6 +1,18 @@
 import sqlite3
 import functools
 from datetime import datetime
+
+def with_db_connection(func):
+    @functools.wraps(func)
+
+    def wrapper(*args, **kwargs):
+        conn= sqlite3.connect('users.db')
+        try:
+            result = func(conn, *args, **kwargs)
+        finally:
+            conn.close()
+        return result
+    return wrapper
 def log_queries(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -31,3 +43,12 @@ CREATE TABLE IF NOT EXISTS users (
     return results
 
 users = fetch_all_users(query="SELECT * FROM users")
+@with_db_connection 
+def get_user_by_id(conn, user_id): 
+   cursor = conn.cursor() 
+   cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,)) 
+   return cursor.fetchone() 
+#### Fetch user by ID with automatic connection handling 
+
+user = get_user_by_id(user_id=1)
+print(user)

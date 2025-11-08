@@ -1,0 +1,10 @@
+venv/
+myenv/
+     
+.env/
+env/
+__pychaceh__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3       

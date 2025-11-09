@@ -23,5 +23,5 @@ with DatabaseConnection('example.db') as conn:
         )
     ''')
     cursor.execute('INSERT INTO users (name, age) VALUES (?, ?)', ('Alice', 25))
-    cursor.execute('INSERT INTO users (name, age) VALUES (?, ?)', ('Bob', 30))
+    cursor.execute('SELECT * FROM users')
   

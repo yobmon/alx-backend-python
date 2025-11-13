@@ -24,17 +24,18 @@ class TestAccessNestedMap(unittest.TestCase):
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
 class   TestGetJson(unittest.TestCase):
-    @patch("requests.get")
+    @patch("utils.requests.get")
     def test_get_json(self, mock_get):
         mock_response = Mock()
         expected_payload = {"key": "value"}
         mock_response.json.return_value = expected_payload
         mock_get.return_value = mock_response
 
-        url = "http://example.com/api"
+        url = "http://example.com/apikokos"
         result = get_json(url)
         self.assertEqual(result, expected_payload)
         mock_get.assert_called_once_with(url)
+
         
 if __name__ == '__main__':
     unittest.main()

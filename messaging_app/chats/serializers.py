@@ -6,7 +6,7 @@ from django.utils.timesince import timesince
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model= User
-        fields = ['user_id','password_hasj','email', 'first_name', 'last_name', 'phone_number', 'role', 'created_at','password']
+        fields = '__all__'
 class MessageSerializer(serializers.ModelSerializer):
 
     time_since_sent = serializers.SerializerMethodField()
@@ -14,7 +14,7 @@ class MessageSerializer(serializers.ModelSerializer):
     message_body = serializers.CharField()
     class Meta:
         model = Message
-        fields = ['message_id', 'sender', 'conversation', 'message_body', 'sent_at']
+        fields ='__all__'
     def get_time_since_sent(self, obj):
         return timesince(obj.sent_at) + " ago"
     def validate_message_body(self, value):
@@ -26,4 +26,4 @@ class ConversationSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True, read_only=True)
     class Meta:
         model = Conversation
-        fields = ['conversation_id', 'participants', 'created_at', 'messages']
+        fields ='__all__'

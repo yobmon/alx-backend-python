@@ -11,6 +11,8 @@ from utils import access_nested_map, get_json, memoize
 
 class TestAccessNestedMap(unittest.TestCase):
 
+    """Unit tests for the get_json function."""
+
     @parameterized.expand([
         ({"a": 1}, ["a"], 1),
         ({"a": {"b": 2}}, ["a", "b"], 2),
@@ -34,6 +36,8 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestGetJson(unittest.TestCase):
+
+    """Unit tests for the memoize decorator."""
 
     @patch("utils.requests.get")
     def test_get_json(self, mock_get):

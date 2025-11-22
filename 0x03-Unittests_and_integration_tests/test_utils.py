@@ -10,8 +10,7 @@ from utils import access_nested_map, get_json, memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
-
-    """Unit tests for the get_json function."""
+    """Unit tests for the access_nested_map function."""
 
     @parameterized.expand([
         ({"a": 1}, ["a"], 1),
@@ -23,6 +22,7 @@ class TestAccessNestedMap(unittest.TestCase):
         ),
     ])
     def test_access_nested_map(self, nested_map, path, expected):
+        """Test access_nested_map returns the correct value for a given path."""
         result = access_nested_map(nested_map, path)
         self.assertEqual(result, expected)
 
@@ -31,16 +31,17 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": 1}, ("a", "b")),
     ])
     def test_access_nested_map_exception(self, nested_map, path):
+        """Test access_nested_map raises KeyError when path is invalid."""
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
 
 
 class TestGetJson(unittest.TestCase):
-
-    """Unit tests for the memoize decorator."""
+    """Unit tests for the get_json function."""
 
     @patch("utils.requests.get")
     def test_get_json(self, mock_get):
+        """Test get_json returns the expected JSON payload from a URL."""
         test_values = [
             ("http://example.com", {"payload": True}),
             ("http://holberton.io", {"payload": False}),
@@ -60,19 +61,23 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestClass:
-    """Class used for testing memoization decorator."""
+    """Class used for testing the memoize decorator."""
 
     def a_method(self):
+        """Method that returns a fixed value for testing."""
         return 42
 
     @memoize
     def a_property(self):
+        """Property decorated with memoize to cache the method result."""
         return self.a_method()
 
 
 class TestMemoize(unittest.TestCase):
+    """Unit tests for the memoize decorator."""
 
     def test_memoize(self):
+        """Test that memoize caches the result of a method call."""
         test_instance = TestClass()
 
         with patch.object(

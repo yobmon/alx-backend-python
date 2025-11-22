@@ -9,7 +9,6 @@ from utils import access_nested_map, get_json, memoize
 """
 Unit tests for utility functions: access_nested_map, get_json, and memoize.
 """
-
 class TestAccessNestedMap(unittest.TestCase):
 
     @parameterized.expand([
@@ -55,8 +54,6 @@ class TestGetJson(unittest.TestCase):
 
             mock_get.reset_mock()
 
-
-# -------- Memoize test support class --------
 
 class TestClass:
     def a_method(self):

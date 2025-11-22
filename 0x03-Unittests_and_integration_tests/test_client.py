@@ -30,7 +30,7 @@ class TestGithubOrgClient(unittest.TestCase):
             f"https://api.github.com/orgs/{org_name}"
         )
 
-    def test_public_repos_url(self):
+    def test_public_repos(self):
         """Test that _public_repos_url returns expected repos_url."""
         expected_url = (
             "https://api.github.com/orgs/google/repos"
@@ -47,3 +47,4 @@ class TestGithubOrgClient(unittest.TestCase):
             result = client._public_repos_url
 
         self.assertEqual(result, expected_url)
+

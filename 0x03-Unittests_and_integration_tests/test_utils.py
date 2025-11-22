@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-
-import unittest
-from unittest.mock import patch, Mock
-
-from parameterized import parameterized
-from utils import access_nested_map, get_json, memoize
-
 """
 Unit tests for utility functions: access_nested_map, get_json, and memoize.
 """
+
+import unittest
+from unittest.mock import patch, Mock
+from parameterized import parameterized
+from utils import access_nested_map, get_json, memoize
+
+
 class TestAccessNestedMap(unittest.TestCase):
 
     @parameterized.expand([
@@ -56,6 +56,8 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestClass:
+    """Class used for testing memoization decorator."""
+
     def a_method(self):
         return 42
 
@@ -69,7 +71,11 @@ class TestMemoize(unittest.TestCase):
     def test_memoize(self):
         test_instance = TestClass()
 
-        with patch.object(test_instance, "a_method", return_value=42) as mock_a_method:
+        with patch.object(
+            test_instance,
+            "a_method",
+            return_value=42
+        ) as mock_a_method:
             result1 = test_instance.a_property
             result2 = test_instance.a_property
 

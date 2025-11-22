@@ -18,7 +18,7 @@ class TestAccessNestedMap(unittest.TestCase):
         (
             {"outer": {"inner": {"key": "value"}}},
             ["outer", "inner", "key"],
-            "value",
+            "value"
         ),
     ])
     def test_access_nested_map(self, nested_map, path, expected):
@@ -92,3 +92,4 @@ class TestMemoize(unittest.TestCase):
             self.assertEqual(result2, 42)
 
             mock_a_method.assert_called_once()
+

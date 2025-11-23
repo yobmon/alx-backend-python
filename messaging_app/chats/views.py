@@ -4,6 +4,7 @@ from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from django.shortcuts import get_object_or_404
 from .models import User, Message, Conversation
 from .serializers import UserSerializer, MessageSerializer, ConversationSerializer
 # chats/views.py
@@ -47,12 +48,46 @@ class RegisterView(APIView):
     
 
 
-class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
-    
-    permission_classes = [IsAuthenticated, IsConversationMember]
 
+class MessageViewSet(viewsets.ModelViewSet):
+    """
+    Handles listing, creating, updating, deleting messages
+    in a conversation. Only participants can access.
+    """
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated, IsMessageOwnerOrReadOnly]
+
+    def get_queryset(self):
+        # 1️⃣ Get conversation_id from URL kwargs
+        conversation_id = self.kwargs.get("conversation_pk")
+        
+        # 2️⃣ Ensure the conversation exists
+        conversation = get_object_or_404(Conversation, id=conversation_id)
+        
+        # 3️⃣ Check if the user is a participant
+        if self.request.user not in conversation.participants.all():
+            # 4️⃣ Return empty queryset if not allowed
+            return Message.objects.none()
+        
+        # 5️⃣ Filter messages by conversation_id
+        return Message.objects.filter(conversation_id=conversation_id)
+
+    def create(self, request, *args, **kwargs):
+        conversation_id = self.kwargs.get("conversation_pk")
+        conversation = get_object_or_404(Conversation, id=conversation_id)
+        
+        # Check participant access
+        if request.user not in conversation.participants.all():
+            return Response(
+                {"detail": "You are not a participant of this conversation."},
+                status=status.HTTP_403_FORBIDDEN,  # 6️⃣ Explicit 403
+            )
+        
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(sender=request.user, conversation=conversation)
+        
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer

@@ -79,7 +79,7 @@ class RestrictAccessByTimeMiddleware:
             return x_forwarded_for.split(",")[0]
         return request.META.get("REMOTE_ADDR")
 
-class RolePermissionMiddleware:
+class  RolepermissionMiddleware:
     """
     Middleware that restricts access to certain endpoints based on user roles.
     Expected: Users must have a role attribute on the User model.

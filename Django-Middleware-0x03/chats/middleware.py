@@ -115,3 +115,31 @@ class  RolepermissionMiddleware:
                 )
 
         return self.get_response(request)
+class OffensiveLanguageMiddleware:
+
+    """
+    Middleware that scans outgoing chat messages for offensive language
+    and blocks them if any are found.
+    """
+
+    OFFENSIVE_WORDS = {"badword1", "badword2", "badword3"}  # Example offensive words
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Only check POST requests to message endpoints
+        if request.method == "POST" and "/messages" in request.path:
+            message_content = request.POST.get("content", "")
+
+            # Check for offensive words
+            if any(word in message_content.lower() for word in self.OFFENSIVE_WORDS):
+                return JsonResponse(
+                    {"error": "Message contains offensive language and cannot be sent."},
+                    status=400
+                )
+
+        return self.get_response(request)
+    class RolepermissionMiddleware:
+      def __init__(self, get_response):
+         self.get_response = get_response

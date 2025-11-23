@@ -6,19 +6,39 @@ from rest_framework.decorators import action
 
 from .models import User, Message, Conversation
 from .serializers import UserSerializer, MessageSerializer, ConversationSerializer
+# chats/views.py
 
-
-# -----------------------------
-# User ViewSet
-# -----------------------------
+from rest_framework.views import APIView
+from rest_framework import status
+from django.contrib.auth import get_user_model
+User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-# -----------------------------
-# Message ViewSet
-# -----------------------------
+class ProtectedView(APIView):
+    """
+    A simple ViewSet for testing protected endpoint.
+    Accessible only to authenticated users.
+    """
+    def list(self, request):
+        return Response({"message": "This is a protected endpoint accessible only to authenticated users."})
+class RegisterView(APIView):
+    """User signup"""
+
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if not username or not password:
+            return Response({"error": "Missing username or password"}, status=400)
+
+        if User.objects.filter(username=username).exists():
+            return Response({"error": "User already exists"}, status=400)
+
+        user = User.objects.create_user(username=username, password=password)
+        return Response({"message": "User created", "id": user.id}, status=status.HTTP_201_CREATED)
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer

@@ -19,3 +19,17 @@ class IsConversationMember(BasePermission):
     def has_object_permission(self, request, view, obj):
         # conversation.members is assumed to be a ManyToMany field
         return request.user in obj.participants.all()
+class IsMessageOwnerOrReadOnly(BasePermission):
+    """
+    Only the owner of a message can EDIT or DELETE it.
+    Other participants can only READ.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        
+        # SAFE methods = GET, HEAD, OPTIONS
+        if request.method in ("GET", "HEAD", "OPTIONS"):
+            return True
+        
+        # Only owner can update or delete
+        return obj.sender == request.user

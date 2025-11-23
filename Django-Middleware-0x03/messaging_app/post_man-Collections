@@ -1,0 +1,28 @@
+{
+  "info": {
+    "name": "Messaging API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"alice\",\n    \"password\": \"password123\"\n}"
+        },
+        "url": {"raw": "http://127.0.0.1:8000/api/auth/login/", "host": ["http://127.0.0.1:8000"], "path": ["api","auth","login"]}
+      }
+    },
+    {
+      "name": "List Conversations",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+        "url": {"raw": "http://127.0.0.1:8000/api/conversations/", "host": ["http://127.0.0.1:8000"], "path": ["api","conversations"]}
+      }
+    }
+  ]
+}

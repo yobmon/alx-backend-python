@@ -11,8 +11,13 @@ from .serializers import UserSerializer, MessageSerializer, ConversationSerializ
 from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib.auth import get_user_model
+
+from .permissions import IsConversationMember
+from .permissions import IsOwner
+from rest_framework.permissions import IsAuthenticated
 User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -39,22 +44,19 @@ class RegisterView(APIView):
 
         user = User.objects.create_user(username=username, password=password)
         return Response({"message": "User created", "id": user.id}, status=status.HTTP_201_CREATED)
+    
+
+
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+    
+    permission_classes = [IsAuthenticated, IsConversationMember]
 
-
-# -----------------------------
-# Conversation ViewSet
-# -----------------------------
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
 
-    # -------------------------
-    # Endpoint to create a new conversation
-    # POST /conversations/create_conversation/
-    # -------------------------
     @action(detail=False, methods=["post"])
     def create_conversation(self, request):
         participant_ids = request.data.get("participants", [])
@@ -72,11 +74,6 @@ class ConversationViewSet(viewsets.ModelViewSet):
             ConversationSerializer(conversation).data,
             status=status.HTTP_201_CREATED
         )
-
-    # -------------------------
-    # Endpoint to send message to existing conversation
-    # POST /conversations/<id>/send_message/
-    # -------------------------
     @action(detail=True, methods=["post"])
     def send_message(self, request, pk=None):
         conversation = self.get_object()
@@ -93,3 +90,5 @@ class ConversationViewSet(viewsets.ModelViewSet):
             MessageSerializer(message).data,
             status=status.HTTP_201_CREATED
         )
+    permission_classes = [IsAuthenticated, IsConversationMember]
+

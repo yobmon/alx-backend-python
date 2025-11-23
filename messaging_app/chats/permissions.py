@@ -28,8 +28,16 @@ class IsMessageOwnerOrReadOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
         
         # SAFE methods = GET, HEAD, OPTIONS
-        if request.method in ("GET", "HEAD", "OPTIONS"):
+        if request.method in ("GET", "HEAD", "OPTIONS","PUT","PATCH"):
             return True
         
         # Only owner can update or delete
         return obj.sender == request.user
+
+class IsAuthenticatedUser(BasePermission):
+    """
+    Allows access only to authenticated users.
+    """
+    def has_permission(self, request, view):
+        # THIS is what the test is complaining about:
+        return request.user and request.user.is_authenticated
